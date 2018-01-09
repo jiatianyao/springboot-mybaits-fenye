@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+
+    <title>Spring Framework Guru</title>
+
+    <!--/*/ <th:block th:include="fragments/headerinc :: head"></th:block> /*/-->
+</head>
+<body>
+<div class="container">
+
+    <form action="/product/down">
+        <div>
+            <label>订单号</label> <input type="text"  name="id" th:value="${id}"
+                 id="id" placeholder="在此输入ID" />
+        </div>
+        <button type="submit" class="btn btn-primary" id="search">导出</button>
+    </form>
+
+    <div th:if="${not #lists.isEmpty(Product)}"><h2>Product List</h2>
+        <table class="table table-striped">
+            <tr><th>ID</th><th>VERSION</th><th>PRODUCTID</th><th>DESCRIPTION</th><th>IMAGEURL</th><th>PRICE</th> </tr>
+            <tr th:each="product : ${Product}">
+                <td th:text="${product.id}">ID</td>
+                <td th:text="${product.version}">VERSION</td>
+                <td th:text="${product.productId}">PRODUCTID</td>
+                <td th:text="${product.description}">DESCRIPTION</td>
+                <td th:text="${product.imageUrl}">IMAGEURL</td>
+                <td th:text="${product.price}">PRICE</td></tr>
+        </table>
+
+    </div>
+
+
+    <!-- Pagination Bar -->
+    <div th:fragment='paginationbar'>
+        <div>
+            <ul class='pagination pagination-centered'>
+                <li th:class="${isFirstPage}?'disabled':''">
+                <span th:if='${isFirstPage}'>← First</span>
+                <a th:if='${not isFirstPage}' th:href='@{${"/product"}(pageNum=0,size=${pageSize})}'>← First</a>
+                </li>
+                <li th:class="${hasPreviousPage}? '' : 'disabled'">
+                <span th:if='${not hasPreviousPage}'>«</span>
+                <a th:if='${hasPreviousPage}' th:href='@{${"/product"}(pageNum=${pageNum-2},size=${pageSize})}' title='Go to previous page'>«</a>
+                </li>
+                <li th:each='pageNo : ${#numbers.sequence(1, totalPages)}' th:class="${pageNum eq pageNo}? 'active' : ''">
+                    <a th:if="${pageNum eq pageNo}" href="javascript:void(0);">
+                        <span th:text="${pageNo}"></span>
+                    </a>
+                    <a th:if="${not (pageNum eq pageNo)}" th:href="@{${'/product'}(pageNum=${pageNo},size=${pageSize})}">
+                        <span th:text="${pageNo}"></span>
+                    </a>
+
+                </li>
+                <li th:class="${hasNextPage}? '' : 'disabled'">
+                <span th:if='${not hasNextPage}'>»</span>
+                <a th:if='${hasNextPage}' th:href='@{${"/product"}(pageNum=${pageNum},size=${pageSize})}' title='Go to next page'>»</a>
+                </li>
+                <li th:class="${isLastPage}? 'disabled' : ''">
+                <span th:if='${isLastPage}'>Last →</span>
+                <a th:if='${not isLastPage}' th:href='@{${"/product"}(pageNum=${totalPages},size=${pageSize})}'>Last →</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
